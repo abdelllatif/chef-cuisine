@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -54,4 +54,4 @@
         <p>&copy; 2024 Atlass Chef. Tous droits réservés.</p>
     </footer>
 </body>
-</html>
+</html> -->

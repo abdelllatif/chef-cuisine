@@ -89,7 +89,7 @@
         <div>
             <a href="index.php" class="px-4 text-yellow-400 hover:text-yellow-500 transition-all">Home</a>
             <a href="Menu.php" class="px-4 hover:text-yellow-500 transition-all">Menu</a>
-            <a href="user.php" class="px-4 hover:text-yellow-500 transition-all">Reservations</a>
+            <a href="reservation.php" class="px-4 hover:text-yellow-500 transition-all">Reservations</a>
         </div>
         <div>
             <a href="SignIn.html">
