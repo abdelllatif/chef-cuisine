@@ -81,29 +81,31 @@
     </style>
 </head>
 <body class="font-sans bg-gray-50">
-    <!-- Navbar -->
-    <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
+    
+      <!-- Navbar -->
+      <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
-            <img src="img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
+            <img src="/img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
         </div>
         <div>
-            <a href="index.php" class="px-4 text-yellow-400 hover:text-yellow-500 transition-all">Home</a>
-            <a href="Menu.php" class="px-4 hover:text-yellow-500 transition-all">Menu</a>
-            <a href="reservation.php" class="px-4 hover:text-yellow-500 transition-all">Reservations</a>
+            <a href="index.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Home</a>
+            <a href="Menu.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Menu</a>
+            <a href="reservation.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Reservations</a>
         </div>
         <div>
-            <a href="SignIn.html">
-                <button class="bg-green-600 px-5 py-2 ml-2 rounded-xl hover:bg-green-700 transition-all">
+            <a href="SignIn.php">
+                <button class="bg-orange-500 px-5 py-2 ml-2 rounded-xl hover:bg-black transition-all">
                     Sign In
                 </button>
             </a>
-            <a href="SignUp.html">
-                <button class="bg-green-600 px-5 py-2 ml-2 rounded-xl hover:bg-green-700 transition-all">
+            <a href="SignUp.php">
+                <button class="bg-orange-500 px-5 py-2 ml-2 rounded-xl hover:bg-black transition-all">
                     Sign Up
                 </button>
             </a>
         </div>
     </nav>
+
     <!-- Header Carousel Section -->
     <header class="relative">
         <div class="carousel">

@@ -10,14 +10,14 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Navbar -->
-    <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
+      <!-- Navbar -->
+      <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
             <img src="/img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
         </div>
         <div>
-            <a href="index.php" class="px-4 text-orange-200 hover:text-yellow-500 transition-all">Home</a>
-            <a href="Menu.php" class="px-4 text-orange-200 hover:text-yellow-500 transition-all">Menu</a>
+            <a href="index.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Home</a>
+            <a href="Menu.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Menu</a>
             <a href="reservation.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Reservations</a>
         </div>
         <div>
