@@ -1,41 +1,32 @@
 <?php
-// الاتصال بقاعدة البيانات
-$host = "localhost"; // اسم الخادم
-$user = "root";      // اسم المستخدم
-$password = "";      // كلمة المرور
-$dbname = "chef_cuisine"; // اسم قاعدة البيانات
+// checkaddmenu.php
+include 'connected.php'; // تأكد من أن هذا هو اسم ملف الاتصال الصحيح
 
-$conn = new mysqli($host, $user, $password, $dbname);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $menuTitle = $_POST['menuTitle'];
+    $menuDescription = $_POST['menuDescription'];
+    $plats = $_POST['plats']; // This will be an array of plat IDs
 
-// التحقق من الاتصال
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Insert the new menu into the menu table
+    $stmt = $conn->prepare("INSERT INTO menu (title, description) VALUES (?, ?)");
+    $stmt->bind_param("ss", $menuTitle, $menuDescription);
+    
+    if ($stmt->execute()) {
+        $menuId = $stmt->insert_id; // Get the ID of the newly created menu
 
-// التحقق من إرسال البيانات
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $menuTitle = $conn->real_escape_string($_POST['menuTitle']);
-    $menuDescription = $conn->real_escape_string($_POST['menuDescription']);
-    $plats = $_POST['plats']; // مصفوفة الأطباق المختارة
-
-    // إدخال القائمة في جدول menu
-    $sql = "INSERT INTO menu (title, description) VALUES ('$menuTitle', '$menuDescription')";
-    if ($conn->query($sql) === TRUE) {
-        $menuId = $conn->insert_id; // الحصول على ID الخاص بالقائمة
-
-        // إدخال الأطباق المرتبطة بالقائمة
-        foreach ($plats as $plat) {
-            $plat = $conn->real_escape_string($plat);
-            $sqlPlat = "INSERT INTO plats (menu_id, title, ingredients, image) VALUES ('$menuId', '$plat', 'Sample Ingredients', 'default.jpg')";
-            $conn->query($sqlPlat);
+        // Now insert the plats into the menu_plats table
+        foreach ($plats as $platId) {
+            $stmt = $conn->prepare("INSERT INTO menu_plats (menu_id, plat_id) VALUES (?, ?)");
+            $stmt->bind_param("ii", $menuId, $platId);
+            $stmt->execute();
         }
 
-        echo "Menu and associated plats added successfully!";
+        echo "Menu created successfully!";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $stmt->error;
     }
-}
 
-// إغلاق الاتصال
-$conn->close();
+    $stmt->close();
+    $conn->close();
+}
 ?>

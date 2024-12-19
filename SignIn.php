@@ -94,7 +94,7 @@
             <input type="password" id="password" name="password" required class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Enter your password" />
           </div>
         </div>
-        <button type="submit" class="w-full p-3 mt-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Sign In</button>
+        <button type="submit" class="w-full p-3 mt-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">Sign In</button>
       </form>
       <p class="text-center text-sm text-gray-600">Don't have an account? <a href="SignUp.html" class="text-indigo-600 hover:underline">Sign Up</a></p>
     </div>
