@@ -133,14 +133,13 @@ $result = $conn->query($query);
 
                                     if ($result->num_rows > 0) {
                                         while ($plat = $result->fetch_assoc()) {
-                                            echo "<option value='" . $plat['id'] . "'>" . htmlspecialchars($plat['name']) . "</option>";
+                                            echo "<option value='" . $plat['id'] . "'>" . htmlspecialchars($plat['title']) . "</option>";
                                         }
                                     } else {
                                         echo "<option value=''>No plats available</option>";
                                     }
                                     ?>
-                                </ ```html
-select>
+                               
                                 <button type="button" class="removePlatButton text-red-500 font-semibold hover:underline">Remove</button>
                             </div>
                         </div>
@@ -157,7 +156,7 @@ select>
                     </form>
                 </section>
             </div>
-            <div id="addPlate" class="dashboard-section">
+            <!-- <div id="addPlate" class="dashboard-section">
                 <section class="bg-white p-8 rounded-lg shadow-lg mb-6 max-w-2xl mx-auto">
                     <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Ajouter un Plat</h2>
                     <form action="check_plat.php" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -180,7 +179,7 @@ select>
                         </div>
                     </form>
                 </section>
-            </div>
+            </div> -->
 
             <div id="viewClients" class="dashboard-section">
                 <section class="bg-white p-8 rounded-lg shadow-lg mb-6 max-w-4xl mx-auto">

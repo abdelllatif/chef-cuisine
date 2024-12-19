@@ -6,7 +6,6 @@
   <title>Sign Up</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom modal styling */
     .modal {
       display: none;
       position: fixed;
@@ -56,7 +55,6 @@
   </style>
 </head>
 <body class="bg-gray-100">
-        <!-- Navbar -->
         <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
             <img src="img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
@@ -108,7 +106,6 @@
     </div>
   </section>
 
-  <!-- Custom Alert Modal -->
   <div id="alert-modal" class="modal">
     <div class="modal-content">
       <div class="modal-header" id="alert-title"></div>
@@ -175,35 +172,30 @@
     </div>
   </footer>
   <script>
-    // Regex patterns for validation
-    const usernameRegex = /^[a-zA-Z0-9_]{3,15}$/; // Alphanumeric and underscore, 3-15 characters
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // Email pattern
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // At least 8 characters, 1 letter, 1 number
+    const usernameRegex = /^[a-zA-Z0-9_]{3,15}$/; 
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; 
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; 
 
     const modal = document.getElementById("alert-modal");
     const closeBtn = document.getElementById("close-btn");
 
-    // Function to display the custom modal with message
     function showModal(title, message) {
         document.getElementById("alert-title").innerText = title;
         document.getElementById("alert-message").innerText = message;
         modal.style.display = "flex";
     }
 
-    // Hide the modal when clicking close button
     closeBtn.addEventListener("click", () => {
         modal.style.display = "none";
     });
 
     document.getElementById("signup-form").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent form submission to check validation
-
+        event.preventDefault(); 
         const username = document.getElementById("username").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirm-password").value;
 
-        // Validate fields
         if (!usernameRegex.test(username)) {
             showModal('Invalid Username', 'Username should be alphanumeric and between 3-15 characters.');
             return;
@@ -224,10 +216,9 @@
             return;
         }
 
-        // If all validations pass, show success modal
         showModal('Success!', 'You have successfully registered.');
         setTimeout(() => {
-            window.location.href = 'SignIn.php'; // Redirect to SignIn page after success
+            window.location.href = 'SignIn.php'; 
         }, 2000);
     });
   </script>

@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-       <!-- Navbar -->
        <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
             <img src="img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
@@ -34,8 +33,7 @@
     <div class="max-w-4xl  mx-auto p-6">
         <h1 class="text-2xl font-bold mb-4">Your Reservations</h1>
 
-        <!-- Reservation Form -->
-        <form id="reservationForm" class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <form action="add_reservation.php"  method="post" id="reservationForm" class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-lg font-semibold mb-4">Add a Reservation</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div>
