@@ -118,7 +118,7 @@
     <section class="bg-white p-8 rounded-lg shadow-lg mb-6 max-w-2xl mx-auto">
         <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Create a New Menu</h2>
 
-        <form action="process_menu.php" method="POST" class="space-y-6">
+        <form action="checkaddmenu.php" method="POST" class="space-y-6">
             <!-- Menu Title -->
             <div class="flex flex-col">
                 <label for="menuTitle" class="text-lg text-gray-700">Menu Title</label>
@@ -137,11 +137,15 @@
                 <!-- Default Plat Dropdown -->
                 <div class="flex space-x-4 items-center">
                     <select name="plats[]" class="p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 flex-grow" required>
-                        <option value="" disabled selected>Select a Plat</option>
-                        <option value="plat1">Plat 1</option>
-                        <option value="plat2">Plat 2</option>
-                        <option value="plat3">Plat 3</option>
-                        <option value="plat4">Plat 4</option>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<option value='{$row['id']}'>{$row['title']}</option>";
+                        }
+                    } else {
+                        echo "<option value='' disabled>No plats available</option>";
+                    }
+                    ?>
                     </select>
                     <button type="button" class="removePlatButton text-red-500 font-semibold hover:underline">Remove</button>
                 </div>

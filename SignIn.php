@@ -59,7 +59,7 @@
         <!-- Navbar -->
         <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
-            <img src="/img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
+            <img src="img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
         </div>
         <div>
             <a href="index.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Home</a>
@@ -110,7 +110,62 @@
       </div>
     </div>
   </div>
-
+ 
+  <footer class="bg-gray-800 mt-32 text-white mt-10">
+    <div class="container mx-auto px-6 py-8">
+      <!-- Logo -->
+      <div class=" mb-6">
+        <img class="w-24 mx-auto" src="img/ligo.png" alt="Logo">
+      </div>
+  
+      <!-- Footer Sections -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        
+        <!-- About Us & Contact Info -->
+        <div>
+          <h4 class="text-xl font-bold mb-4">About Us</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-gray-400">Call: (456) 789-12301</a></li>
+            <li><a href="mailto:info@Saadastaurant.com" class="hover:text-gray-400">info@Saadastaurant.com</a></li>
+          </ul>
+        </div>
+  
+        <!-- Explore & Recent News -->
+        <div>
+          <h4 class="text-xl font-bold mb-4">Explore</h4>
+          <ul class="space-y-2">
+            <li><a href="resturant.html" class="hover:text-gray-400">Home</a></li>
+            <li><a href="#" class="hover:text-gray-400">Services</a></li>
+          </ul>
+        </div>
+  
+        <!-- Customer Support -->
+        <div>
+          <h4 class="text-xl font-bold mb-4">Customer Support</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-gray-400">FAQs</a></li>
+            <li><a href="#" class="hover:text-gray-400">Return Policy</a></li>
+          </ul>
+        </div>
+      </div>
+  
+      <!-- Social Media Icons -->
+      <div class="flex justify-center mt-6 space-x-6">
+        <a href="#" class="text-white hover:text-blue-500">
+          <i class="bx bxl-facebook text-2xl"></i>
+        </a>
+        <a href="#" class="text-white hover:text-pink-500">
+          <i class="bx bxl-instagram text-2xl"></i>
+        </a>
+        <a href="#" class="text-white hover:text-blue-700">
+          <i class="bx bxl-linkedin text-2xl"></i>
+        </a>
+        <a href="#" class="text-white hover:text-blue-400">
+          <i class="bx bxl-twitter text-2xl"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
   <script>
     // Regex pattern for email validation
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // Email pattern

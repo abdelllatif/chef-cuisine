@@ -10,7 +10,7 @@
        <!-- Navbar -->
        <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
-            <img src="/img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
+            <img src="img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
         </div>
         <div>
             <a href="index.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Home</a>
@@ -61,7 +61,7 @@
                     <input type="number" id="nbrPerson" min="1" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
                 </div>
             </div>
-            <button type="submit" class="w-full bg-green-500 text-white font-semibold py-2 rounded-md hover:bg-green-600">Add Reservation</button>
+            <button type="submit" class="w-full bg-yellow-500 text-white font-semibold py-2 rounded-md hover:bg-yellow-800">Add Reservation</button>
         </form>
 
         <!-- Reservations Table -->
@@ -86,11 +86,12 @@
         </div>
     </div>
 
+ 
     <footer class="bg-gray-800 mt-32 text-white mt-10">
     <div class="container mx-auto px-6 py-8">
       <!-- Logo -->
       <div class=" mb-6">
-        <img class="w-24 mx-auto" src="img/logo.jpg" alt="Logo">
+        <img class="w-24 mx-auto" src="img/ligo.png" alt="Logo">
       </div>
   
       <!-- Footer Sections -->
