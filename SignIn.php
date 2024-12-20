@@ -1,53 +1,70 @@
 <?php
-session_start(); // Ensure session is started
+session_start();
+include 'connected.php'; 
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "chef_cuisine";
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $email = $_POST['email'];
+  $password = $_POST['password'];
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+  $stmt = $conn->prepare("SELECT id, password, role_id FROM users WHERE email = ?");
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->store_result();
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+  if ($stmt->num_rows > 0) {
+      $stmt->bind_result($userId, $hashedPassword, $roleId);
+      $stmt->fetch();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Form was submitted
+      if (password_verify($password, $hashedPassword)) {
+          $_SESSION['user_id'] = $userId;
+          $_SESSION['role_id'] = $roleId; 
+
+   
+      
+      } else {
+          $_SESSION['login_error'] = "Invalid email or password.";
+      }
+  } else {
+      $_SESSION['login_error'] = "Invalid email or password.";
+  }
+
+  
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Check if user exists
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE email = ?");
+    error_log("Email: $email");
+    error_log("Password: $password");
+
+    $stmt = $conn->prepare("SELECT id, password, role_id FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id, $hashedPassword);
+        $stmt->bind_result($userId, $hashedPassword, $roleId);
         $stmt->fetch();
 
-        // Check password
+        error_log("User  ID: $userId, Hashed Password: $hashedPassword, Role ID: $roleId");
+
         if (password_verify($password, $hashedPassword)) {
-            // Successful login
-            $_SESSION['user_id'] = $id; // Store user ID in session
-            header("Location: index.php"); // Redirect to homepage
+            $_SESSION['user_id'] = $userId;
+            $_SESSION['role_id'] = $roleId; 
+                var_dump($_SESSION['user_id']);
+            if ( $_SESSION['user_id'] == 1) {
+                header("Location: dachbored.php");
+            } else {
+                header("Location: index.php");
+            }
             exit();
         } else {
-            // Invalid password
-            $_SESSION['login_error'] = 'Invalid password.';
+            $_SESSION['login_error'] = "Invalid email or password.";
         }
     } else {
-        // User does not exist
-        $_SESSION['login_error'] = 'User  does not exist.';
+        $_SESSION['login_error'] = "Invalid email or password.";
     }
 
-    $stmt->close();
+   
 }
-
-// Close the connection
 $conn->close();
 ?>
 
@@ -59,7 +76,6 @@ $conn->close();
   <title>Sign In</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom modal styling */
     .modal {
       display: none;
       position: fixed;
@@ -112,24 +128,17 @@ $conn->close();
     <!-- Navbar -->
     <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
-            <img src="img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
+            <img src="img/ligo.png" alt="شعار" class="w-16 h-16 mr-2"> 
         </div>
         <div>
             <a href="index.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Home</a>
             <a href="Menu.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Menu</a>
-            <a href="reservation.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Reservations</a>
-        </div>
-        <div>
-            <a href="SignIn.php">
-                <button class="bg-orange-500 px-5 py-2 ml-2 rounded-xl hover:bg-black transition-all">
-                    Sign In
-                </button>
-            </a>
-            <a href="SignUp.php">
-                <button class="bg-orange-500 px-5 py-2 ml-2 rounded-xl hover:bg-black transition-all">
-                    Sign Up
-                </button>
-            </a>
+            <?php if (isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1): ?>
+                <a href="dashboard.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Dashboard</a>
+            <?php endif; ?>
+            <a href="SignIn.php" class="px-4 py-2 text-orange- 200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Sign In</a>
+            <a href="SignUp.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Sign Up</a>
+            <a href="logout.php" class="px-4 py-2 text-orange-200 hover:bg-yellow-500 hover:text-white border border-transparent hover:border-[#FF7F50] rounded-lg transition-all duration-300">Logout</a>
         </div>
     </nav>
 
@@ -166,7 +175,7 @@ $conn->close();
 
   <footer class="bg-gray-800 mt-32 text-white mt-10">
     <div class="container mx-auto px-6 py-8">
-      <div class=" mb-6">
+      <div class="mb-6">
         <img class="w-24 mx-auto" src="img/ligo.png" alt="Logo">
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -194,7 +203,8 @@ $conn->close();
       </div>
       <div class="flex justify-center mt-6 space-x-6">
         <a href="#" class="text-white hover:text-blue-500">
-          <i class="bx bxl-facebook text-2xl"></i>
+          <i class="bx ```html
+          bxl-facebook text-2xl"></i>
         </a>
         <a href="#" class="text-white hover:text-pink-500">
           <i class="bx bxl-instagram text-2xl"></i>
@@ -213,35 +223,30 @@ $conn->close();
     const modal = document.getElementById("alert-modal");
     const closeBtn = document.getElementById("close-btn");
 
-    // Function to display the custom modal with message
     function showModal(title, message) {
         document.getElementById("alert-title").innerText = title;
         document.getElementById("alert-message").innerText = message;
         modal.style.display = "flex";
     }
 
-    // Hide the modal when clicking close button
     closeBtn.addEventListener("click", () => {
         modal.style.display = "none";
     });
 
-    // Check if there's a login error stored in session
     <?php if (isset($_SESSION['login_error'])): ?>
         showModal('Login Failed', '<?php echo $_SESSION['login_error']; ?>');
-        <?php unset($_SESSION['login_error']); ?> // Clear the session error after displaying it
+        <?php unset($_SESSION['login_error']); ?> 
     <?php endif; ?>
 
-    // Regex pattern for email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // Email pattern
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
     const signinform = document.getElementById("signin-form");
     signinform.addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent form submission to check validation
+        event.preventDefault(); 
 
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        // Validate email and password
         if (!emailRegex.test(email)) {
             showModal('Invalid Email', 'Please enter a valid email address.');
             return;
@@ -252,10 +257,9 @@ $conn->close();
             return;
         }
 
-        // If all validations pass, submit the form
         signinform.submit();
     });
   </script>
 
 </body>
-</html> 
+</html>

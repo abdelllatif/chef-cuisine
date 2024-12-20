@@ -1,56 +1,33 @@
 <?php
-$servername = "localhost"; 
-$username = "root"; 
-$password = ""; 
-$dbname = "chef_cuisine";
+session_start();
+include 'connected.php'; 
 
-// إنشاء اتصال بقاعدة البيانات
-$conn = new mysqli($servername, $username, $password, $dbname);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);    
+    $role_id = 2; // Assuming 2 is the default role for regular users
 
-// التحقق من الاتصال
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Update the SQL query to include role_id
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("sssi", $username, $email, $password, $role_id); // Add role_id to the bind_param
 
-// التحقق من طريقة الطلب
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['username'] ?? null;
-    $email = $_POST['email'] ?? null;
-    $password = $_POST['password'] ?? null;
-
-    // التحقق من وجود جميع الحقول
-    if (!$name || !$email || !$password) {
-        die("All fields are required.");
-    }
-
-    // التحقق من وجود المستخدم بالفعل
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        die("User  with this email already exists.");
-    }
-
-    // تشفير كلمة المرور
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    // إعداد الاستعلام لإدخال المستخدم الجديد
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $name, $email, $hashedPassword);
-
-    // تنفيذ الاستعلام والتحقق من النتيجة
     if ($stmt->execute()) {
-        echo "User  registered successfully.";
+        $userId = $stmt->insert_id; 
+
+        $_SESSION['user_id'] = $userId; 
+        if ($userId == 1) {
+            header("Location: dashboard.php");
+        } else {
+            header("Location: index.php"); 
+        }
+        exit();
     } else {
-        echo "Error: " . $stmt->error;
+        echo "error: " . $stmt->error;
     }
 
-    // إغلاق البيان
     $stmt->close();
-}
 
-// إغلاق الاتصال بقاعدة البيانات
+}
 $conn->close();
 ?>

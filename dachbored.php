@@ -395,6 +395,43 @@ $reservations = $conn->query("SELECT r.id, u.name AS client_name, m.title AS men
                 platDiv.remove();
             });
         });
+        document.getElementById("addPlatsButton").addEventListener("click", function() {
+        const platsContainer = document.getElementById("platsContainer");
+
+        const platDiv = document.createElement("div");
+        platDiv.classList.add("flex", "space-x-4", "items-center");
+
+        const platSelect = document.createElement("select");
+        platSelect.name = "plats[]";
+        platSelect.classList.add("p-4", "border", "border-gray-300", "rounded-md", "focus:outline-none", "focus:ring-2", "focus:ring-green-500", "flex-grow");
+        platSelect.required = true;
+
+        platSelect.innerHTML = `
+         <select name="plats[]" class="p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 flex-grow" required>
+            <option value="" disabled selected>Select a dish</option>
+                                </select>
+
+            <?php
+            $result->data_seek(0);
+            while ($plat = $result->fetch_assoc()) {
+                echo "<option value='" . $plat['id'] . "'>" . htmlspecialchars($plat['title']) . "</option>";
+            }
+            ?>
+        `;
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.classList.add("removePlatButton", "text-red-500", "font-semibold", "hover:underline");
+        removeButton.textContent = "Remove";
+
+        platDiv.appendChild(platSelect);
+        platDiv.appendChild(removeButton);
+        platsContainer.appendChild(platDiv);
+
+        removeButton.addEventListener("click", function() {
+            platDiv.remove();
+        });
+    });
 
     </script>
 </body>
