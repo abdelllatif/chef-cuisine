@@ -1,3 +1,23 @@
+<?php
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "chef_cuisine";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+ $query = "SELECT * FROM menu";  
+$result = $conn->query($query);
+$menu = $conn->query("SELECT * FROM menu");
+$plats = $plats = $conn->query("SELECT * FROM plats");
+
+?>
+
+
 <!DOCTYPE php>
 <html lang="en">
 <head>
@@ -34,49 +54,35 @@
         </div>
     </nav>
 
-    <!-- Main Container -->
     <section class="bg-[#F5F5F5] py-20">
         <div class="max-w-7xl mx-auto px-6">
-            <!-- Title Section -->
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold text-black mb-4">Exclusive Culinary Experiences</h2>
                 <p class="text-lg text-black opacity-80">Indulge in gourmet dining experiences crafted just for you. Explore bespoke menus, and book a private culinary journey.</p>
             </div>
             
-            <!-- Menu Options -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                <!-- Menu Item 1 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                    <img src="img/menu-item-1.jpg" alt="Gourmet Dish" class="w-full h-60 object-cover rounded-t-xl">
+           
+            <?php while ($row = $menu->fetch_assoc() && $plat = $plats->fetch_assoc()): ?>                  ?>
+                  <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                   
+                  <img  src="<?php echo $plat['image']; ?>" alt="Gourmet Dish" class="w-full h-60 object-cover rounded-t-xl">
                     <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-black mb-4">Signature Dish: Truffle Risotto</h3>
-                        <p class="text-gray-600 mb-6">Experience luxury with this creamy, truffle-infused risotto. A dish fit for the finest occasions.</p>
+                        <h3 class="text-2xl font-semibold text-black mb-4"><?php echo htmlspecialchars($row['title']); ?></h3>
+                        <p class="text-gray-600 mb-6"><?php echo htmlspecialchars($row['description']); ?></p>
                         <button onclick="reserveDish('Signature Dish: Truffle Risotto')" class="w-full bg-orange-500 text-white py-2 rounded-full hover:bg-orange-800 transition duration-300">Reserve This Dish</button>
                     </div>
                 </div>
+          
+    <?php endwhile; ?>
 
-                <!-- Menu Item 2 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                    <img src="img/menu-item-2.jpg" alt="Gourmet Dish" class="w-full h-60 object-cover rounded-t-xl">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-black mb-4">Classic French Bouillabaisse</h3>
-                        <p class="text-gray-600 mb-6">Delve into the flavors of the French Riviera with this hearty seafood stew served with a fragrant broth.</p>
-                        <button onclick="reserveDish('Classic French Bouillabaisse')" class="w-full bg-orange-500 text-white py-2 rounded-full hover:bg-orange-800 transition duration-300">Reserve This Dish</button>
-                    </div>
-                </div>
 
-                <!-- Menu Item 3 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                    <img src="img/menu-item-3.jpg" alt="Gourmet Dish" class="w-full h-60 object-cover rounded-t-xl">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-black mb-4">Vegan Delight: Grilled Veggies with Quinoa</h3>
-                        <p class="text-gray-600 mb-6">A vibrant and healthy vegan dish featuring seasonal grilled veggies and quinoa, topped with a lemon dressing.</p>
-                        <button onclick="reserveDish('Vegan Delight: Grilled Veggies with Quinoa')" class="w-full bg-orange-500 text-white py-2 rounded-full hover:bg-orange-800 transition duration-300">Reserve This Dish</button>
-                    </div>
-                </div>
+
+
+
+             
             </div>
 
-            <!-- Reserve Section -->
             <div id="reserve" class="text-center mt-16">
                 <a href="reservation-page.php" class="text-white  bg-orange-500  py-3 px-10 rounded-full text-2xl hover:bg-orange-800 transition">Book Your Experience Now</a>
             </div>
@@ -86,15 +92,12 @@
    
     <footer class="bg-gray-800 mt-32 text-white mt-10">
     <div class="container mx-auto px-6 py-8">
-      <!-- Logo -->
       <div class=" mb-6">
         <img class="w-24 mx-auto" src="img/ligo.png" alt="Logo">
       </div>
   
-      <!-- Footer Sections -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
         
-        <!-- About Us & Contact Info -->
         <div>
           <h4 class="text-xl font-bold mb-4">About Us</h4>
           <ul class="space-y-2">
@@ -103,7 +106,6 @@
           </ul>
         </div>
   
-        <!-- Explore & Recent News -->
         <div>
           <h4 class="text-xl font-bold mb-4">Explore</h4>
           <ul class="space-y-2">
@@ -112,7 +114,6 @@
           </ul>
         </div>
   
-        <!-- Customer Support -->
         <div>
           <h4 class="text-xl font-bold mb-4">Customer Support</h4>
           <ul class="space-y-2">

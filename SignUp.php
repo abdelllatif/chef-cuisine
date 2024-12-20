@@ -81,7 +81,7 @@
   <section class="flex items-center justify-center h-screen">
     <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold text-center text-gray-700">Sign Up</h2>
-      <form id="signup-form">
+      <form id="signup-form"  action="register.php" method="POST">
         <div class="space-y-4">
           <div>
             <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
@@ -178,6 +178,7 @@
 
     const modal = document.getElementById("alert-modal");
     const closeBtn = document.getElementById("close-btn");
+    const signupForm = document.getElementById("signup-form");
 
     function showModal(title, message) {
         document.getElementById("alert-title").innerText = title;
@@ -189,7 +190,7 @@
         modal.style.display = "none";
     });
 
-    document.getElementById("signup-form").addEventListener("submit", function(event) {
+    signupForm.addEventListener("submit", function(event) {
         event.preventDefault(); 
         const username = document.getElementById("username").value;
         const email = document.getElementById("email").value;
@@ -216,11 +217,9 @@
             return;
         }
 
-        showModal('Success!', 'You have successfully registered.');
-        setTimeout(() => {
-            window.location.href = 'SignIn.php'; 
-        }, 2000);
+        // إذا كانت جميع المدخلات صحيحة، قم بإرسال البيانات
+        signupForm.submit(); // هذا سيقوم بإرسال النموذج إلى register.php
     });
-  </script>
+</script>
 </body>
 </html>

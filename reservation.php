@@ -30,39 +30,50 @@
         </div>
     </nav>
 
-    <div class="max-w-4xl  mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-4">Your Reservations</h1>
+    <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Your Reservations</h1>
 
-        <form action="add_reservation.php"  method="post" id="reservationForm" class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-lg font-semibold mb-4">Add a Reservation</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label for="menu" class="block text-sm font-medium text-gray-700">Menu</label>
-                    <select id="menu" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
-                        <option value="" disabled selected>Select a Dish</option>
-                        <option value="dish1">Dish 1</option>
-                        <option value="dish2">Dish 2</option>
-                        <option value="dish3">Dish 3</option>
-                        <option value="dish4">Dish 4</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" id="date" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
-                </div>
-                <div>
-                    <label for="time" class="block text-sm font-medium text-gray-700">Time</label>
-                    <input type="time" id="time" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
-                </div>
-                <div>
-                    <label for="nbrPerson" class="block text-sm font-medium text-gray-700">Number of Persons</label>
-                    <input type="number" id="nbrPerson" min="1" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
-                </div>
+    <form action="add_reservation.php" method="post" id="reservationForm" class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-lg font-semibold mb-4">Add a Reservation</h2>
+        <div class="flex flex-wrap gap-4 mb-4">
+            <div class="flex-1 min-w-[200px]">
+                <label for="menu" class="block text-sm font-medium text-gray-700">Menu</label>
+                <select name="plats[]" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500" required>
+                    <?php
+                    include 'connected.php'; 
+
+                    $query = "SELECT id, title FROM menu"; 
+                    $result = $conn->query($query);
+
+                    if ($result->num_rows > 0) {
+                        while ($plat = $result->fetch_assoc()) {
+                            echo "<option value='" . $plat['id'] . "'>" . htmlspecialchars($plat['title']) . "</option>";
+                        }
+                    } else {
+                        echo "<option value=''>No plats available</option>";
+                    }
+                    ?>
+                </select>
             </div>
-            <button type="submit" class="w-full bg-yellow-500 text-white font-semibold py-2 rounded-md hover:bg-yellow-800">Add Reservation</button>
-        </form>
+            <div class="flex-1 min-w-[200px]">
+    <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+    <input type="date" id="date" name="date" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
+</div>
+<div class="flex-1 min-w-[200px]">
+    <label for="time" class="block text-sm font-medium text-gray-700">Time</label>
+    <input type="time" id="time" name="time" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
+</div>
+<div class="flex-1 min-w-[200px]">
+    <label for="nbrPerson" class="block text-sm font-medium text-gray-700">Number of Persons</label>
+    <input type="number" id="nbrPerson" name="nbrPerson" min="1" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500">
+</div>
 
-        <!-- Reservations Table -->
+        </div>
+        <button type="submit" id="submit" class="w-full bg-yellow-500 text-white font-semibold py-2 rounded-md hover:bg-yellow-800">Add Reservation</button>
+    </form>
+</div>
+
+
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-lg font-semibold mb-4">Reservations</h2>
             <table class="w-full table-auto border-collapse border border-gray-300">
@@ -78,7 +89,6 @@
                     </tr>
                 </thead>
                 <tbody id="reservationsTableBody">
-                    <!-- Dynamic rows will be added here -->
                 </tbody>
             </table>
         </div>
@@ -87,15 +97,12 @@
  
     <footer class="bg-gray-800 mt-32 text-white mt-10">
     <div class="container mx-auto px-6 py-8">
-      <!-- Logo -->
       <div class=" mb-6">
         <img class="w-24 mx-auto" src="img/ligo.png" alt="Logo">
       </div>
   
-      <!-- Footer Sections -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
         
-        <!-- About Us & Contact Info -->
         <div>
           <h4 class="text-xl font-bold mb-4">About Us</h4>
           <ul class="space-y-2">
@@ -104,7 +111,6 @@
           </ul>
         </div>
   
-        <!-- Explore & Recent News -->
         <div>
           <h4 class="text-xl font-bold mb-4">Explore</h4>
           <ul class="space-y-2">
@@ -113,7 +119,6 @@
           </ul>
         </div>
   
-        <!-- Customer Support -->
         <div>
           <h4 class="text-xl font-bold mb-4">Customer Support</h4>
           <ul class="space-y-2">
@@ -123,7 +128,6 @@
         </div>
       </div>
   
-      <!-- Social Media Icons -->
       <div class="flex justify-center mt-6 space-x-6">
         <a href="#" class="text-white hover:text-blue-500">
           <i class="bx bxl-facebook text-2xl"></i>
@@ -140,43 +144,37 @@
       </div>
     </div>
   </footer>
-    <script>
-        const reservationForm = document.getElementById('reservationForm');
-        const reservationsTableBody = document.getElementById('reservationsTableBody');
+  <script>
+reservationForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent default submission
 
-        reservationForm.addEventListener('submit', function(event) {
-            event.preventDefault();
+    const menuSelect = reservationForm.querySelector('select[name="plats[]"]');
+    const selectedPlatName = menuSelect.options[menuSelect.selectedIndex].text;
 
-            // Get input values
-            const menu = document.getElementById('menu').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const nbrPerson = document.getElementById('nbrPerson').value;
+    const date = document.querySelector('#date').value;
+    const time = document.querySelector('#time').value;
+    const nbrPerson = document.querySelector('#nbrPerson').value;
 
-            if (!menu || !date || !time || !nbrPerson) {
-                alert('Please fill in all fields.');
-                return;
-            }
+    // Add row to the table
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td class="border border-gray-300 p-2">${selectedPlatName}</td>
+        <td class="border border-gray-300 p-2">${date}</td>
+        <td class="border border-gray-300 p-2">${time}</td>
+        <td class="border border-gray-300 p-2">${nbrPerson}</td>
+        <td class="border border-gray-300 p-2 text-yellow-500 font-semibold">Pending</td>
+        <td class="border border-gray-300 p-2">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Modify</button>
+            <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel</button>
+        </td>
+    `;
+    document.getElementById('reservationsTableBody').appendChild(newRow);
 
-            // Create a new table row
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td class="border border-gray-300 p-2">${menu}</td>
-                <td class="border border-gray-300 p-2">${date}</td>
-                <td class="border border-gray-300 p-2">${time}</td>
-                <td class="border border-gray-300 p-2">${nbrPerson}</td>
-                <td class="border border-gray-300 p-2 text-yellow-500 font-semibold">Pending</td>
-                <td class="border border-gray-300 p-2 text-yellow-500 font-semibold">  <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Modify</button>
-                            <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel</button></td>
+    // Proceed with server submission
+    reservationForm.submit();
+});
 
-            `;
 
-            // Append the new row to the table body
-            reservationsTableBody.appendChild(newRow);
-
-            // Clear form fields
-            reservationForm.reset();
-        });
-    </script>
+</script>
 </body>
 </html>

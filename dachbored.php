@@ -12,7 +12,18 @@ if ($conn->connect_error) {
 
 $query = "SELECT id, title FROM plats";  
 $result = $conn->query($query);
+// استعلام للحصول على الإحصائيات
+$totalPending = $conn->query("SELECT COUNT(*) AS count FROM reservations WHERE status = 'en attente'")->fetch_assoc()['count'];
+$totalConfirmedToday = $conn->query("SELECT COUNT(*) AS count FROM reservations WHERE status = 'confirme' AND date = CURDATE()")->fetch_assoc()['count'];
+$totalClients = $conn->query("SELECT COUNT(*) AS count FROM users")->fetch_assoc()['count'];
+$reservations = $conn->query("SELECT r.id, u.name AS client_name, m.title AS menu_title, r.date, r.time, r.number_of_people, r.status 
+                              FROM reservations r 
+                              JOIN users u ON r.user_id = u.id
+                              JOIN menu m ON r.menu_id = m.id");
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,22 +61,19 @@ $result = $conn->query($query);
             <div id="chefDashboard" class="dashboard-section active">
                 <h2 class="text-3xl font-semibold mb-8 text-gray-800">Gestion des Réservations</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <h3 class="text-lg font-bold mb-2">Demandes en Attente</h3>
-                        <p class="text-5xl text-yellow-500 font-bold">5</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <h3 class="text-lg font-bold mb-2">Demandes Approuvées Aujourd'hui</h3>
-                        <p class="text-5xl text-green-500 font-bold">8</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <h3 class="text-lg font-bold mb-2">Demandes Approuvées pour Demain</h3>
-                        <p class="text-5xl text-blue-500 font-bold">3</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <h3 class="text-lg font-bold mb-2">Nombre de Clients Inscrits</h3>
-                        <p class="text-5xl text-purple-500 font-bold">50</p>
-                    </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+    <h3 class="text-lg font-bold mb-2">Demandes en Attente</h3>
+    <p class="text-5xl text-yellow-500 font-bold"><?php echo $totalPending; ?></p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-lg text-center">
+    <h3 class="text-lg font-bold mb-2">Demandes Approuvées Aujourd'hui</h3>
+    <p class="text-5xl text-green-500 font-bold"><?php echo $totalConfirmedToday; ?></p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-lg text-center">
+    <h3 class="text-lg font-bold mb-2">Nombre de Clients Inscrits</h3>
+    <p class="text-5xl text-purple-500 font-bold"><?php echo $totalClients; ?></p>
+</div>
+
                 </div>
 
                 <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
@@ -87,76 +95,73 @@ $result = $conn->query($query);
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b">
-                                <td class="py-3 px-4">Marie Claire</td>
-                                <td class="py-3 px-4">20:00</td>
-                                <td class="py-3 px-4">3</td>
-                                <td class="py-3 px-4">
-                                    <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all">Accepter</button>
-                                    <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all ml-2">Refuser</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="py-3 px-4">Lucas Martin</td>
-                                <td class="py-3 px-4">21:30</td>
-                                <td class="py-3 px-4">8</td>
-                                <td class="py-3 px-4">
-                                    <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all">Accepter</button>
-                                    <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all ml-2">Refuser</button>
-                                </td>
-                            </tr>
-                        </tbody>
+    <?php while ($row = $reservations->fetch_assoc()): ?>
+        <tr class="border-b">
+            <td class="py-3 px-4"><?php echo htmlspecialchars($row['client_name']); ?></td>
+            <td class="py-3 px-4"><?php echo htmlspecialchars($row['menu_title']); ?></td>
+            <td class="py-3 px-4"><?php echo htmlspecialchars($row['date']); ?></td>
+            <td class="py-3 px-4"><?php echo htmlspecialchars($row['time']); ?></td>
+            <td class="py-3 px-4"><?php echo htmlspecialchars($row['number_of_people']); ?></td>
+            <td class="py-3 px-4"><?php echo htmlspecialchars($row['status']); ?></td>
+            <td class="py-3 px-4">
+                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all">Confirmer</button>
+                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all ml-2">Annuler</button>
+            </td>
+        </tr>
+    <?php endwhile; ?>
+</tbody>
+
                     </table>
                 </div>
             </div>
             <div id="addMenu" class="dashboard-section">
-                <section class="bg-white p-8 rounded-lg shadow-lg mb-6 max-w-2xl mx-auto">
-                    <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Create a New Menu</h2>
-                    <form action="checkaddmenu.php" method="POST" class="space-y-6">
-                        <div class="flex flex-col">
-                            <label for="menuTitle" class="text-lg text-gray-700">Menu Title</label>
-                            <input type="text" name="menuTitle" id="menuTitle" class="mt-2 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full" placeholder="Enter Menu Title" required>
-                        </div>
-                        <div class="flex flex-col">
-                            <label for="menuDescription" class="text-lg text-gray-700">Menu Description</label>
-                            <textarea id="menuDescription" name="menuDescription" rows="4" required class="mt-2 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full" placeholder="Describe your menu items here"></textarea>
-                        </div>
-                        <div id="platsContainer" class="space-y-4">
-                            <h3 class="text-xl font-semibold text-gray-700">Plats</h3>
-                            <div class="flex space-x-4 items-center">
-                                <select name="plats[]" class="p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 flex-grow" required>
-                                    <?php
-                                    include 'connected.php'; 
-
-                                    $query = "SELECT id, title FROM plats"; 
-                                    $result = $conn->query($query);
-
-                                    if ($result->num_rows > 0) {
-                                        while ($plat = $result->fetch_assoc()) {
-                                            echo "<option value='" . $plat['id'] . "'>" . htmlspecialchars($plat['title']) . "</option>";
-                                        }
-                                    } else {
-                                        echo "<option value=''>No plats available</option>";
-                                    }
-                                    ?>
-                               
-                                <button type="button" class="removePlatButton text-red-500 font-semibold hover:underline">Remove</button>
-                            </div>
-                        </div>
-                        <div class="flex justify-center">
-                            <button type="button" id="addPlatsButton" class="bg-green-600 text-white px-6 py-4 rounded-lg hover:bg-green-700 transition-all focus:outline-none focus:ring-2 focus:ring-green-500">
-                                Add Another Plat
-                            </button>
-                        </div>
-                        <div class="flex justify-center">
-                            <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                Create Menu
-                            </button>
-                        </div>
-                    </form>
-                </section>
+    <section class="bg-white p-8 rounded-lg shadow-lg mb-6 max-w-2xl mx-auto">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Create a New Menu</h2>
+        <form action="checkaddmenu.php" method="POST" class="space-y-6">
+            <div class="flex flex-col">
+                <label for="menuTitle" class="text-lg text-gray-700">Menu Title</label>
+                <input type="text" name="menuTitle" id="menuTitle" class="mt-2 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full" placeholder="Enter Menu Title" required>
             </div>
-            <!-- <div id="addPlate" class="dashboard-section">
+            <div class="flex flex-col">
+                <label for="menuDescription" class="text-lg text-gray-700">Menu Description</label>
+                <textarea id="menuDescription" name="menuDescription" rows="4" required class="mt-2 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full" placeholder="Describe your menu items here"></textarea>
+            </div>
+            <div id="platsContainer" class="space-y-4">
+                <h3 class="text-xl font-semibold text-gray-700">Plats</h3>
+                <div class="flex space-x-4 items-center">
+                    <select name="plats[]" class="p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 flex-grow" required>
+                        <?php
+                        include 'connected.php'; 
+
+                        $query = "SELECT id, title FROM plats"; 
+                        $result = $conn->query($query);
+
+                        if ($result->num_rows > 0) {
+                            while ($plat = $result->fetch_assoc()) {
+                                echo "<option value='" . $plat['id'] . "'>" . htmlspecialchars($plat['title']) . "</option>";
+                            }
+                        } else {
+                            echo "<option value=''>No plats available</option>";
+                        }
+                        ?>
+                    </select>
+                    <button type="button" class="removePlatButton text-red-500 font-semibold hover:underline">Remove</button>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <button type="button" id="addPlatsButton" class="bg-green-600 text-white px-6 py-4 rounded-lg hover:bg-green-700 transition-all focus:outline-none focus:ring-2 focus:ring-green-500">
+                    Add Another Plat
+                </button>
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Create Menu
+                </button>
+            </div>
+        </form>
+    </section>
+</div>
+            <div id="addPlate" class="dashboard-section">
                 <section class="bg-white p-8 rounded-lg shadow-lg mb-6 max-w-2xl mx-auto">
                     <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Ajouter un Plat</h2>
                     <form action="check_plat.php" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -179,7 +184,7 @@ $result = $conn->query($query);
                         </div>
                     </form>
                 </section>
-            </div> -->
+            </div>
 
             <div id="viewClients" class="dashboard-section">
                 <section class="bg-white p-8 rounded-lg shadow-lg mb-6 max-w-4xl mx-auto">

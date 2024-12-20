@@ -1,3 +1,56 @@
+<?php
+session_start(); // Ensure session is started
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "chef_cuisine";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Form was submitted
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Check if user exists
+    $stmt = $conn->prepare("SELECT id, password FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($id, $hashedPassword);
+        $stmt->fetch();
+
+        // Check password
+        if (password_verify($password, $hashedPassword)) {
+            // Successful login
+            $_SESSION['user_id'] = $id; // Store user ID in session
+            header("Location: index.php"); // Redirect to homepage
+            exit();
+        } else {
+            // Invalid password
+            $_SESSION['login_error'] = 'Invalid password.';
+        }
+    } else {
+        // User does not exist
+        $_SESSION['login_error'] = 'User  does not exist.';
+    }
+
+    $stmt->close();
+}
+
+// Close the connection
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,8 +109,8 @@
   </style>
 </head>
 <body class="bg-gray-100">
-        <!-- Navbar -->
-        <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
+    <!-- Navbar -->
+    <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <div class="text-lg font-semibold flex items-center">
             <img src="img/ligo.png" alt="Logo" class="w-16 h-16 mr-2"> 
         </div>
@@ -83,7 +136,7 @@
   <section class="flex items-center justify-center h-screen">
     <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold text-center text-gray-700">Sign In</h2>
-      <form id="signin-form">
+      <form id="signin-form" action="" method="POST">
         <div class="space-y-4">
           <div>
             <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
@@ -110,18 +163,13 @@
       </div>
     </div>
   </div>
- 
+
   <footer class="bg-gray-800 mt-32 text-white mt-10">
     <div class="container mx-auto px-6 py-8">
-      <!-- Logo -->
       <div class=" mb-6">
         <img class="w-24 mx-auto" src="img/ligo.png" alt="Logo">
       </div>
-  
-      <!-- Footer Sections -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-        
-        <!-- About Us & Contact Info -->
         <div>
           <h4 class="text-xl font-bold mb-4">About Us</h4>
           <ul class="space-y-2">
@@ -129,8 +177,6 @@
             <li><a href="mailto:info@Saadastaurant.com" class="hover:text-gray-400">info@Saadastaurant.com</a></li>
           </ul>
         </div>
-  
-        <!-- Explore & Recent News -->
         <div>
           <h4 class="text-xl font-bold mb-4">Explore</h4>
           <ul class="space-y-2">
@@ -138,8 +184,6 @@
             <li><a href="#" class="hover:text-gray-400">Services</a></li>
           </ul>
         </div>
-  
-        <!-- Customer Support -->
         <div>
           <h4 class="text-xl font-bold mb-4">Customer Support</h4>
           <ul class="space-y-2">
@@ -148,8 +192,6 @@
           </ul>
         </div>
       </div>
-  
-      <!-- Social Media Icons -->
       <div class="flex justify-center mt-6 space-x-6">
         <a href="#" class="text-white hover:text-blue-500">
           <i class="bx bxl-facebook text-2xl"></i>
@@ -166,10 +208,8 @@
       </div>
     </div>
   </footer>
-  <script>
-    // Regex pattern for email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // Email pattern
 
+  <script>
     const modal = document.getElementById("alert-modal");
     const closeBtn = document.getElementById("close-btn");
 
@@ -185,7 +225,17 @@
         modal.style.display = "none";
     });
 
-    document.getElementById("signin-form").addEventListener("submit", function(event) {
+    // Check if there's a login error stored in session
+    <?php if (isset($_SESSION['login_error'])): ?>
+        showModal('Login Failed', '<?php echo $_SESSION['login_error']; ?>');
+        <?php unset($_SESSION['login_error']); ?> // Clear the session error after displaying it
+    <?php endif; ?>
+
+    // Regex pattern for email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // Email pattern
+
+    const signinform = document.getElementById("signin-form");
+    signinform.addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent form submission to check validation
 
         const email = document.getElementById("email").value;
@@ -202,15 +252,10 @@
             return;
         }
 
-        // If all validations pass, show success modal
-        showModal('Success!', 'You have successfully signed in.');
-
-        // Redirect to homepage after success
-        setTimeout(() => {
-            window.location.href = 'index.php';
-        }, 2000); // Wait 2 seconds before redirect
+        // If all validations pass, submit the form
+        signinform.submit();
     });
   </script>
 
 </body>
-</html>
+</html> 
